@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🍄 觸控瑪莉歐冒險</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="在手機上單擊觸控遊玩的瑪莉歐冒險遊戲！點擊跳躍，滑動移動，收集金幣和道具！">
+</head>
+<body>
+    <!-- 遊戲載入畫面 -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="mario-character">🍄</div>
+            <h1>觸控瑪莉歐冒險</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p>準備開始冒險...</p>
+        </div>
+    </div>
+
+    <!-- 遊戲主界面 -->
+    <div id="gameContainer" class="game-container" style="display: none;">
+        <!-- 遊戲標題 -->
+        <header class="game-header">
+            <h1>🍄 觸控瑪莉歐冒險</h1>
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-icon">🏆</span>
+                    <span id="scoreValue">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">💰</span>
+                    <span id="coinsValue">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">❤️</span>
+                    <span id="livesValue">3</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 遊戲畫布 -->
+        <div class="game-area">
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- 遊戲控制說明 -->
+            <div class="game-controls" id="gameControls">
+                <div class="control-instruction">
+                    <div class="instruction-item">
+                        <span class="instruction-icon">👆</span>
+                        <span>單擊跳躍</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">👈👉</span>
+                        <span>滑動移動</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">🛡️</span>
+                        <span>躲避敵人</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 觸控指示器 -->
+            <div class="touch-indicators">
+                <div class="touch-zone left-zone" id="leftZone">
+                    <span class="zone-label">←</span>
+                </div>
+                <div class="touch-zone jump-zone" id="jumpZone">
+                    <span class="zone-label">跳</span>
+                </div>
+                <div class="touch-zone right-zone" id="rightZone">
+                    <span class="zone-label">→</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遊戲菜單 -->
+        <div id="gameMenu" class="game-menu">
+            <div class="menu-content">
+                <h2>🍄 瑪莉歐冒險</h2>
+                <div class="menu-buttons">
+                    <button id="startBtn" class="menu-btn primary">🚀 開始遊戲</button>
+                    <button id="instructionsBtn" class="menu-btn secondary">📖 操作說明</button>
+                    <button id="settingsBtn" class="menu-btn secondary">⚙️ 設定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作說明彈窗 -->
+        <div id="instructionsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h3>🎮 操作說明</h3>
+                <div class="instructions-list">
+                    <div class="instruction-item">
+                        <span class="icon">👆</span>
+                        <div class="text">
+                            <strong>單擊跳躍</strong>
+                            <p>點擊螢幕任意位置讓瑪莉歐跳躍</p>
+                        </div>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="icon">👈</span>
+                        <div class="text">
+                            <strong>左滑移動</strong>
+                            <p>向左滑動讓瑪莉歐向左移動</p>
+                        </div>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="icon">👉</span>
+                        <div class="text">
+                            <strong>右滑移動</strong>
+                            <p>向右滑動讓瑪莉歐向右移動</p>
+                        </div>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="icon">💰</span>
+                        <div class="text">
+                            <strong>收集金幣</strong>
+                            <p>觸碰金幣可以增加分數</p>
+                        </div>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="icon">🍄</span>
+                        <div class="text">
+                            <strong>蘑菇道具</strong>
+                            <p>蘑菇可以恢復生命或加分</p>
+                        </div>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="icon">👾</span>
+                        <div class="text">
+                            <strong>避開敵人</strong>
+                            <p>碰到敵人會失去生命</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="modal-close-btn">了解了！</button>
+            </div>
+        </div>
+
+        <!-- 遊戲結束彈窗 -->
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content">
+                <h3 id="gameOverTitle">🎮 遊戲結束</h3>
+                <div class="game-over-stats">
+                    <div class="stat-row">
+                        <span>最終分數：</span>
+                        <span id="finalScore">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>收集金幣：</span>
+                        <span id="finalCoins">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>遊戲時間：</span>
+                        <span id="finalTime">0秒</span>
+                    </div>
+                </div>
+                <div class="game-over-buttons">
+                    <button id="restartBtn" class="menu-btn primary">🔄 再玩一次</button>
+                    <button id="menuBtn" class="menu-btn secondary">🏠 回到主選單</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 設定彈窗 -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h3>⚙️ 遊戲設定</h3>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <label>音量</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+                        <span id="volumeValue">50%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>敏感度</label>
+                        <input type="range" id="sensitivitySlider" min="1" max="10" value="5">
+                        <span id="sensitivityValue">中</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>輔助模式</label>
+                        <input type="checkbox" id="assistMode">
+                    </div>
+                </div>
+                <button class="modal-close-btn">儲存設定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 載入遊戲腳本 -->
+    <script src="js/mario.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

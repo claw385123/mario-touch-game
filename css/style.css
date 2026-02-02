@@ -1,0 +1,617 @@
+/* 全局樣式和重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(45deg, #87CEEB, #98FB98);
+    min-height: 100vh;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 遊戲容器 */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* 載入畫面 */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+    animation: fadeInUp 1s ease-out;
+}
+
+.mario-character {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+}
+
+.loading-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.loading-bar {
+    width: 300px;
+    height: 8px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto 1rem;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    width: 0%;
+    animation: loadingAnimation 3s ease-in-out infinite;
+}
+
+.loading-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* 遊戲標題欄 */
+.game-header {
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 100;
+}
+
+.game-header h1 {
+    color: white;
+    font-size: 1.8rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.stat-icon {
+    font-size: 1.2rem;
+}
+
+/* 遊戲區域 */
+.game-area {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 120px);
+    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+    overflow: hidden;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 3px solid #2c3e50;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 70%, #8B4513 70%, #8B4513 100%);
+}
+
+/* 遊戲控制說明 */
+.game-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255,255,255,0.9);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: slideInLeft 1s ease-out;
+}
+
+.control-instruction {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.instruction-icon {
+    font-size: 1.2rem;
+}
+
+/* 觸控指示器 */
+.touch-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.touch-zone {
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.touch-zone.active {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.1);
+}
+
+.zone-label {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 遊戲菜單 */
+.game-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+}
+
+.menu-content {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: scaleIn 0.5s ease-out;
+    max-width: 400px;
+    margin: 20px;
+}
+
+.menu-content h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.menu-btn.primary {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+}
+
+.menu-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,107,0.6);
+}
+
+.menu-btn.secondary {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+    box-shadow: 0 4px 15px rgba(78,205,196,0.4);
+}
+
+.menu-btn.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78,205,196,0.6);
+}
+
+/* 彈窗樣式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 600;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.modal-content h3 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 操作說明內容 */
+.instructions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.instructions-list .instruction-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #4ecdc4;
+}
+
+.instructions-list .icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.instructions-list .text {
+    flex: 1;
+}
+
+.instructions-list .text strong {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.instructions-list .text p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.modal-close-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+}
+
+/* 遊戲結束彈窗 */
+.game-over-stats {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-row span:first-child {
+    color: #666;
+    font-weight: 600;
+}
+
+.stat-row span:last-child {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.game-over-buttons .menu-btn {
+    flex: 1;
+}
+
+/* 設定頁面 */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.setting-item label {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 80px;
+}
+
+.setting-item input[type="range"] {
+    flex: 1;
+    margin: 0 15px;
+    max-width: 150px;
+}
+
+.setting-item input[type="checkbox"] {
+    transform: scale(1.3);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .game-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .game-stats {
+        gap: 20px;
+    }
+    
+    .stat {
+        font-size: 1rem;
+    }
+    
+    .menu-content {
+        padding: 30px 20px;
+        margin: 15px;
+    }
+    
+    .menu-content h2 {
+        font-size: 2rem;
+    }
+    
+    .touch-indicators {
+        bottom: 15px;
+        gap: 15px;
+    }
+    
+    .touch-zone {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .zone-label {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .game-stats {
+        gap: 15px;
+    }
+    
+    .stat {
+        font-size: 0.9rem;
+        gap: 6px;
+    }
+    
+    .menu-content {
+        padding: 25px 15px;
+    }
+    
+    .menu-content h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .menu-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+    
+    .touch-zone {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .zone-label {
+        font-size: 1.1rem;
+    }
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes loadingAnimation {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* 觸控反饋 */
+@media (hover: none) and (pointer: coarse) {
+    .touch-zone:active {
+        transform: scale(0.95);
+        background: rgba(255,255,255,0.6);
+    }
+    
+    .menu-btn:active {
+        transform: scale(0.98);
+    }
+}
+
+/* 防止選取文字 */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* 隱藏滾動條但保持功能 */
+html, body {
+    overflow: hidden;
+}
