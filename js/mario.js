@@ -30,7 +30,6 @@ class Mario {
         // 動畫相關
         this.animationFrame = 0;
         this.animationSpeed = 8; // 更高的數值 = 更慢的動畫
-        this.groundY = canvas.height - 150;
         
         // 遊戲狀態
         this.lives = 3;
@@ -176,8 +175,9 @@ class Mario {
     }
 
     // 繪製瑪莉歐
-    draw() {
-        this.ctx.save();
+    draw(ctx) {
+        ctx = ctx || this.ctx;
+        ctx.save();
         
         // 無敵狀態閃爍效果
         if (this.invulnerable && Math.floor(this.blinkTimer / 100) % 2 === 0) {
@@ -186,80 +186,80 @@ class Mario {
             this.opacity = 1;
         }
         
-        this.ctx.globalAlpha = this.opacity;
+        ctx.globalAlpha = this.opacity;
         
         // 繪製瑪莉歐
-        this.drawMario();
+        this.drawMario(ctx);
         
-        this.ctx.restore();
+        ctx.restore();
     }
 
-    drawMario() {
+    drawMario(ctx) {
         const x = this.x;
         const y = this.y;
         const w = this.width;
         const h = this.height;
         
-        this.ctx.save();
+        ctx.save();
         
         // 如果面向左邊，翻轉畫布
         if (this.facingDirection === 'left') {
-            this.ctx.scale(-1, 1);
-            this.ctx.translate(-x - w, 0);
+            ctx.scale(-1, 1);
+            ctx.translate(-x - w, 0);
         }
         
         // 繪製帽子 (紅色)
-        this.ctx.fillStyle = '#ff4444';
-        this.ctx.fillRect(x + 8, y, 24, 8);
-        this.ctx.fillRect(x + 6, y + 6, 28, 6);
+        ctx.fillStyle = '#ff4444';
+        ctx.fillRect(x + 8, y, 24, 8);
+        ctx.fillRect(x + 6, y + 6, 28, 6);
         
         // 繪製臉部 (肉色)
-        this.ctx.fillStyle = '#ffdbac';
-        this.ctx.fillRect(x + 10, y + 8, 20, 16);
+        ctx.fillStyle = '#ffdbac';
+        ctx.fillRect(x + 10, y + 8, 20, 16);
         
         // 繪製胡子 (棕色)
-        this.ctx.fillStyle = '#8B4513';
-        this.ctx.fillRect(x + 14, y + 16, 12, 4);
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(x + 14, y + 16, 12, 4);
         
         // 繪製鼻子
-        this.ctx.fillStyle = '#ffdbac';
-        this.ctx.fillRect(x + 18, y + 14, 4, 4);
+        ctx.fillStyle = '#ffdbac';
+        ctx.fillRect(x + 18, y + 14, 4, 4);
         
         // 繪製眼睛
-        this.ctx.fillStyle = '#000';
-        this.ctx.fillRect(x + 13, y + 12, 3, 3);
-        this.ctx.fillRect(x + 24, y + 12, 3, 3);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(x + 13, y + 12, 3, 3);
+        ctx.fillRect(x + 24, y + 12, 3, 3);
         
         // 繪製身體 (藍色)
-        this.ctx.fillStyle = '#4444ff';
-        this.ctx.fillRect(x + 10, y + 24, 20, 12);
+        ctx.fillStyle = '#4444ff';
+        ctx.fillRect(x + 10, y + 24, 20, 12);
         
         // 繪製肚子 (肉色)
-        this.ctx.fillStyle = '#ffdbac';
-        this.ctx.fillRect(x + 14, y + 26, 12, 8);
+        ctx.fillStyle = '#ffdbac';
+        ctx.fillRect(x + 14, y + 26, 12, 8);
         
         // 繪製手 (肉色)
-        this.ctx.fillStyle = '#ffdbac';
-        this.ctx.fillRect(x + 4, y + 26, 6, 8);
-        this.ctx.fillRect(x + 30, y + 26, 6, 8);
+        ctx.fillStyle = '#ffdbac';
+        ctx.fillRect(x + 4, y + 26, 6, 8);
+        ctx.fillRect(x + 30, y + 26, 6, 8);
         
         // 繪製褲子 (藍色)
-        this.ctx.fillStyle = '#2c5aa0';
-        this.ctx.fillRect(x + 10, y + 36, 8, 8);
-        this.ctx.fillRect(x + 22, y + 36, 8, 8);
+        ctx.fillStyle = '#2c5aa0';
+        ctx.fillRect(x + 10, y + 36, 8, 8);
+        ctx.fillRect(x + 22, y + 36, 8, 8);
         
         // 繪製靴子 (棕色)
-        this.ctx.fillStyle = '#8B4513';
-        this.ctx.fillRect(x + 8, y + 40, 10, 6);
-        this.ctx.fillRect(x + 22, y + 40, 10, 6);
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(x + 8, y + 40, 10, 6);
+        ctx.fillRect(x + 22, y + 40, 10, 6);
         
         // 繪製陰影
-        this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        this.ctx.beginPath();
-        this.ctx.ellipse(x + w/2, this.groundY + 6, w/2, 4, 0, 0, 2*Math.PI);
-        this.ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(x + w/2, this.groundY + 6, w/2, 4, 0, 0, 2*Math.PI);
+        ctx.fill();
         
-        this.ctx.restore();
+        ctx.restore();
     }
 
     // 碰撞檢測
@@ -354,6 +354,10 @@ class Mario {
     setPosition(x, y) {
         this.x = x;
         this.y = y;
+        // 地面位置由遊戲系統管理
+        if (this.groundY !== undefined) {
+            this.y = Math.min(this.y, this.groundY - this.height);
+        }
     }
 
     // 設置大小
