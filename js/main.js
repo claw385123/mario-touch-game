@@ -294,19 +294,26 @@ class MarioTouchGame {
             this.loadingScreen.style.display = 'none';
         }
         
-        // 顯示主菜單
+        // 顯示遊戲容器
         if (this.gameContainer) {
             this.gameContainer.style.display = 'block';
         }
         
+        // 隱藏主菜單
         if (this.gameMenu) {
-            this.gameMenu.style.display = 'flex';
+            this.gameMenu.style.display = 'none';
         }
         
-        this.currentScreen = 'menu';
+        // 直接開始遊戲（跳過主菜單）
+        this.currentScreen = 'playing';
         
         // 應用設置
         this.applySettings();
+        
+        // 自動開始遊戲
+        setTimeout(() => {
+            this.startGame();
+        }, 500);
     }
 
     startGame() {

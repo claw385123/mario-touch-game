@@ -564,6 +564,16 @@ class Game {
             this.ctx.translate(-this.camera.x, 0);
             this.mario.draw();
             this.ctx.restore();
+            
+            // 調試：繪製瑪莉歐位置框（臨時）
+            this.ctx.strokeStyle = 'red';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(
+                this.mario.x - this.camera.x,
+                this.mario.y,
+                this.mario.width,
+                this.mario.height
+            );
         }
         
         // 繪製粒子

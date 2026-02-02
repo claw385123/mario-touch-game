@@ -9,7 +9,7 @@ class Mario {
         
         // 瑪莉歐位置和大小
         this.x = 50;
-        this.y = canvas.height - 150; // 起始在地面上
+        this.y = canvas.height - 100; // 修正起始位置
         this.width = 40;
         this.height = 40;
         
