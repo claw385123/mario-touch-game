@@ -48,15 +48,25 @@ class MarioTouchGame {
 
     setup() {
         try {
+            console.log('🔍 檢查DOM元素...');
+            
             // 獲取DOM元素
             this.canvas = document.getElementById('gameCanvas');
             this.gameContainer = document.getElementById('gameContainer');
             this.loadingScreen = document.getElementById('loadingScreen');
             this.gameMenu = document.getElementById('gameMenu');
             
+            console.log('Canvas found:', !!this.canvas);
+            console.log('Container found:', !!this.gameContainer);
+            console.log('Loading screen found:', !!this.loadingScreen);
+            console.log('Menu found:', !!this.gameMenu);
+            
             if (!this.canvas) {
+                console.error('❌ 找不到遊戲畫布元素 (gameCanvas)');
                 throw new Error('找不到遊戲畫布元素');
             }
+            
+            console.log('✅ DOM元素檢查完成');
             
             // 設置畫布
             this.setupCanvas();
@@ -101,39 +111,84 @@ class MarioTouchGame {
     }
 
     initGameComponents() {
-        // 初始化遊戲邏輯
-        this.game = new Game(this.canvas);
-        
-        // 初始化控制系統
-        this.controls = new Controls(this.canvas, this.game);
-        
-        // 初始化進度系統（3A級Progression System）
-        this.progression = new ProgressionSystem(this.game);
-        this.game.progression = this.progression;
-        
-        // 初始化關卡生成系統（3A級Content Generation）
-        this.levelGenerator = new LevelGenerator(this.game);
-        this.game.levelGenerator = this.levelGenerator;
-        
-        // 初始化視覺效果系統（3A級Visual Effects）
-        this.visualEffects = new VisualEffectsSystem(this.canvas);
-        this.game.visualEffects = this.visualEffects;
-        
-        // 初始化現代化UI系統（3A級UI System）
-        this.uiSystem = new ModernUISystem(this.game);
-        this.game.uiSystem = this.uiSystem;
-        
-        // 初始化音效系統（3A級Audio System）
-        this.audioSystem = new AudioSystem();
-        this.game.audioSystem = this.audioSystem;
-        
-        // 初始化天氣系統（3A級Weather System）
-        this.weatherSystem = new WeatherSystem(this.canvas, this.game);
-        this.game.weatherSystem = this.weatherSystem;
-        
-        // 初始化AI系統（3A級AI System）
-        this.aiSystem = new AISystem(this.game);
-        this.game.aiSystem = this.aiSystem;
+        try {
+            console.log('🎮 初始化遊戲組件...');
+            
+            // 初始化遊戲邏輯
+            this.game = new Game(this.canvas);
+            console.log('✅ Game 初始化成功');
+            
+            // 初始化控制系統
+            this.controls = new Controls(this.canvas, this.game);
+            console.log('✅ Controls 初始化成功');
+            
+            // 初始化進度系統（3A級Progression System）
+            try {
+                this.progression = new ProgressionSystem(this.game);
+                this.game.progression = this.progression;
+                console.log('✅ ProgressionSystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ ProgressionSystem 初始化失敗:', e);
+            }
+            
+            // 初始化關卡生成系統（3A級Content Generation）
+            try {
+                this.levelGenerator = new LevelGenerator(this.game);
+                this.game.levelGenerator = this.levelGenerator;
+                console.log('✅ LevelGenerator 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ LevelGenerator 初始化失敗:', e);
+            }
+            
+            // 初始化視覺效果系統（3A級Visual Effects）
+            try {
+                this.visualEffects = new VisualEffectsSystem(this.canvas);
+                this.game.visualEffects = this.visualEffects;
+                console.log('✅ VisualEffectsSystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ VisualEffectsSystem 初始化失敗:', e);
+            }
+            
+            // 初始化現代化UI系統（3A級UI System）
+            try {
+                this.uiSystem = new ModernUISystem(this.game);
+                this.game.uiSystem = this.uiSystem;
+                console.log('✅ ModernUISystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ ModernUISystem 初始化失敗:', e);
+            }
+            
+            // 初始化音效系統（3A級Audio System）
+            try {
+                this.audioSystem = new AudioSystem();
+                this.game.audioSystem = this.audioSystem;
+                console.log('✅ AudioSystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ AudioSystem 初始化失敗:', e);
+            }
+            
+            // 初始化天氣系統（3A級Weather System）
+            try {
+                this.weatherSystem = new WeatherSystem(this.canvas, this.game);
+                this.game.weatherSystem = this.weatherSystem;
+                console.log('✅ WeatherSystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ WeatherSystem 初始化失敗:', e);
+            }
+            
+            // 初始化AI系統（3A級AI System）
+            try {
+                this.aiSystem = new AISystem(this.game);
+                this.game.aiSystem = this.aiSystem;
+                console.log('✅ AISystem 初始化成功');
+            } catch (e) {
+                console.warn('⚠️ AISystem 初始化失敗:', e);
+            }
+            
+        } catch (error) {
+            console.error('❌ 遊戲組件初始化失敗:', error);
+            throw error;
+        }
     }
 
     setupUIEvents() {
