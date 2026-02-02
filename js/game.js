@@ -274,8 +274,8 @@ class Game {
         // 更新遊戲
         this.update(deltaTime);
         
-        // 繪製遊戲
-        this.draw();
+        // 繪製遊戲（傳入deltaTime）
+        this.draw(deltaTime);
         
         // 繼續循環
         this.animationId = requestAnimationFrame(() => this.loop());
@@ -530,10 +530,10 @@ class Game {
     }
 
     // 繪製遊戲
-    draw() {
+    draw(deltaTime = 16) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // 更新視覺效果系統
+        // 更新視覺效果系統（使用deltaTime）
         if (this.visualEffects) {
             this.visualEffects.update(deltaTime);
         }
@@ -562,7 +562,7 @@ class Game {
         if (this.mario) {
             this.ctx.save();
             this.ctx.translate(-this.camera.x, 0);
-            this.mario.draw();
+            this.mario.draw(this.ctx);
             this.ctx.restore();
         }
         
