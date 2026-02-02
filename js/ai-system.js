@@ -157,14 +157,8 @@ class AISystem {
         return {
             type: this.behaviorNodes.SEQUENCE,
             children: [
-                {
-                    type: this.behaviorNodes.SELECTOR,
-                    children: [
-                        this.createPlayerCloseCondition(config),
-                        this.createDefaultPatrolAction(config)
-                    ]
-                },
-                this.createUpdatePatrolAction(config)
+                this.createPlayerCloseCondition(config),
+                this.createDefaultPatrolAction(config)
             ]
         };
     }
@@ -173,13 +167,7 @@ class AISystem {
         return {
             type: this.behaviorNodes.SEQUENCE,
             children: [
-                {
-                    type: this.behaviorNodes.PARALLEL,
-                    children: [
-                        this.createThreatDetection(config),
-                        this.createDefensivePosture(config)
-                    ]
-                },
+                this.createThreatDetection(config),
                 this.createCounterAction(config)
             ]
         };
@@ -189,15 +177,8 @@ class AISystem {
         return {
             type: this.behaviorNodes.SEQUENCE,
             children: [
-                {
-                    type: this.behaviorNodes.SELECTOR,
-                    children: [
-                        this.createAmbushCondition(config),
-                        this.createPursuitCondition(config),
-                        this.createHuntAction(config)
-                    ]
-                },
-                this.createAttackPattern(config)
+                this.createAmbushCondition(config),
+                this.createHuntAction(config)
             ]
         };
     }
@@ -216,13 +197,7 @@ class AISystem {
         return {
             type: this.behaviorNodes.SEQUENCE,
             children: [
-                {
-                    type: this.behaviorNodes.PARALLEL,
-                    children: [
-                        this.createDistanceCalculation(config),
-                        this.createEvasionPattern(config)
-                    ]
-                },
+                this.createDistanceCalculation(config),
                 this.createRangedAttackAction(config)
             ]
         };
@@ -453,6 +428,82 @@ class AISystem {
                         entity.state = 'ranged_attacking';
                         this.triggerAIEvent(entity, 'ranged_attack');
                         return this.behaviorNodes.ACTION.SUCCESS;
+                    }
+                }
+                
+                return this.behaviorNodes.ACTION.RUNNING;
+            }
+        };
+    }
+    
+    createTriggerCondition(config) {
+        return {
+            type: this.behaviorNodes.CONDITION,
+            name: 'TriggerCondition',
+            evaluate: (entity, context) => {
+                const player = this.game.mario;
+                if (!player) return false;
+                
+                // 檢查玩家是否在攻擊範圍內
+                const distance = this.getDistance(entity, player);
+                return distance < config.awareness * 100;
+            }
+        };
+    }
+    
+    createResetAction(config) {
+        return {
+            type: this.behaviorNodes.ACTION,
+            name: 'Reset',
+            execute: (entity, context) => {
+                entity.state = 'idle';
+                entity.velocityX = 0;
+                entity.aiState = null;
+                return this.behaviorNodes.ACTION.SUCCESS;
+            }
+        };
+    }
+    
+    createDistanceCalculation(config) {
+        return {
+            type: this.behaviorNodes.ACTION,
+            name: 'DistanceCalculation',
+            execute: (entity, context) => {
+                const player = this.game.mario;
+                if (!player) return this.behaviorNodes.ACTION.FAILURE;
+                
+                const distance = this.getDistance(entity, player);
+                if (!entity.aiState) {
+                    entity.aiState = {};
+                }
+                entity.aiState.targetDistance = distance;
+                
+                return this.behaviorNodes.ACTION.SUCCESS;
+            }
+        };
+    }
+    
+    createRangedAttackAction(config) {
+        return {
+            type: this.behaviorNodes.ACTION,
+            name: 'RangedAttack',
+            execute: (entity, context) => {
+                const player = this.game.mario;
+                if (!player) return this.behaviorNodes.ACTION.FAILURE;
+                
+                const distance = this.getDistance(entity, player);
+                
+                // 距離計算結果檢查
+                if (entity.aiState && entity.aiState.targetDistance !== undefined) {
+                    if (entity.aiState.targetDistance > config.intelligence * 200 && 
+                        entity.aiState.targetDistance < config.intelligence * 300) {
+                        
+                        // 遠程攻擊
+                        if (Math.random() < config.aggression * 0.4) {
+                            entity.state = 'ranged_attacking';
+                            this.triggerAIEvent(entity, 'ranged_attack');
+                            return this.behaviorNodes.ACTION.SUCCESS;
+                        }
                     }
                 }
                 
