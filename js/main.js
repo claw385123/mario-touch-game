@@ -122,6 +122,14 @@ class MarioTouchGame {
         // 初始化現代化UI系統（3A級UI System）
         this.uiSystem = new ModernUISystem(this.game);
         this.game.uiSystem = this.uiSystem;
+        
+        // 初始化音效系統（3A級Audio System）
+        this.audioSystem = new AudioSystem();
+        this.game.audioSystem = this.audioSystem;
+        
+        // 初始化天氣系統（3A級Weather System）
+        this.weatherSystem = new WeatherSystem(this.canvas, this.game);
+        this.game.weatherSystem = this.weatherSystem;
     }
 
     setupUIEvents() {

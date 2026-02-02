@@ -306,6 +306,15 @@ class Game {
         // 更新粒子系統
         this.updateParticles(deltaTime);
         
+        // 更新3A級系統
+        if (this.audioSystem) {
+            // 音效系統更新（如果需要）
+        }
+        
+        if (this.weatherSystem) {
+            this.weatherSystem.update(deltaTime);
+        }
+        
         // 碰撞檢測
         this.checkCollisions();
         
@@ -561,6 +570,11 @@ class Game {
         this.drawParticles();
         
         this.ctx.restore();
+        
+        // 繪製天氣系統（在天氣粒子之前）
+        if (this.weatherSystem) {
+            this.weatherSystem.render();
+        }
         
         // 繪製視覺效果系統
         if (this.visualEffects) {
