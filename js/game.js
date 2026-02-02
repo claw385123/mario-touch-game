@@ -524,12 +524,17 @@ class Game {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // 更新視覺效果系統
+        if (this.visualEffects) {
+            this.visualEffects.update(deltaTime);
+        }
+        
         // 背景
         this.drawBackground();
         
-        // 應用震動效果
+        // 應用視覺效果系統的震動
         this.ctx.save();
-        if (this.shakeIntensity > 0) {
+        if (this.shakeIntensity > 0 || (this.visualEffects && this.visualEffects.screenShake.intensity > 0)) {
             const shakeX = (Math.random() - 0.5) * this.shakeIntensity * 0.01;
             const shakeY = (Math.random() - 0.5) * this.shakeIntensity * 0.01;
             this.ctx.translate(shakeX, shakeY);
@@ -557,10 +562,20 @@ class Game {
         
         this.ctx.restore();
         
+        // 繪製視覺效果系統
+        if (this.visualEffects) {
+            this.visualEffects.render();
+        }
+        
         // 閃爍效果
         if (this.flashIntensity > 0) {
             this.ctx.fillStyle = `rgba(255, 255, 255, ${this.flashIntensity / 1000})`;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
+        // 繪製UI系統
+        if (this.uiSystem && this.uiSystem.currentScreen === 'game') {
+            this.uiSystem.render();
         }
     }
 

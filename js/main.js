@@ -106,6 +106,22 @@ class MarioTouchGame {
         
         // 初始化控制系統
         this.controls = new Controls(this.canvas, this.game);
+        
+        // 初始化進度系統（3A級Progression System）
+        this.progression = new ProgressionSystem(this.game);
+        this.game.progression = this.progression;
+        
+        // 初始化關卡生成系統（3A級Content Generation）
+        this.levelGenerator = new LevelGenerator(this.game);
+        this.game.levelGenerator = this.levelGenerator;
+        
+        // 初始化視覺效果系統（3A級Visual Effects）
+        this.visualEffects = new VisualEffectsSystem(this.canvas);
+        this.game.visualEffects = this.visualEffects;
+        
+        // 初始化現代化UI系統（3A級UI System）
+        this.uiSystem = new ModernUISystem(this.game);
+        this.game.uiSystem = this.uiSystem;
     }
 
     setupUIEvents() {
