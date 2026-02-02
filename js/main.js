@@ -130,6 +130,10 @@ class MarioTouchGame {
         // 初始化天氣系統（3A級Weather System）
         this.weatherSystem = new WeatherSystem(this.canvas, this.game);
         this.game.weatherSystem = this.weatherSystem;
+        
+        // 初始化AI系統（3A級AI System）
+        this.aiSystem = new AISystem(this.game);
+        this.game.aiSystem = this.aiSystem;
     }
 
     setupUIEvents() {
